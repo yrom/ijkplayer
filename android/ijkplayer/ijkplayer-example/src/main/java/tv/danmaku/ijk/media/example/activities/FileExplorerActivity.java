@@ -18,6 +18,7 @@
 package tv.danmaku.ijk.media.example.activities;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -35,11 +36,11 @@ import tv.danmaku.ijk.media.example.fragments.FileListFragment;
 
 public class FileExplorerActivity extends AppActivity {
     private Settings mSettings;
-
+    private String mDefaultPath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mDefaultPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         if (mSettings == null) {
             mSettings = new Settings(this);
         }
@@ -48,7 +49,7 @@ public class FileExplorerActivity extends AppActivity {
         if (!TextUtils.isEmpty(lastDirectory) && new File(lastDirectory).isDirectory())
             doOpenDirectory(lastDirectory, false);
         else
-            doOpenDirectory("/", false);
+            doOpenDirectory(mDefaultPath, false);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class FileExplorerActivity extends AppActivity {
             f = f.getAbsoluteFile();
             f = f.getCanonicalFile();
             if (TextUtils.isEmpty(f.toString()))
-                f = new File("/");
+                f = new File(mDefaultPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
